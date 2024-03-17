@@ -13,6 +13,11 @@ function loadPage(pageName) {
       .then(response => response.text())
       .then(data => {
           document.getElementById('content').innerHTML = data;
+
+          if (pageName == "Students"){
+           createStudentDOM(data);
+          }
+    
       })
       .catch(error => console.error('Error loading page:', error));
 }
@@ -26,7 +31,6 @@ window.onload = function () {
     if (option.textContent == curPage){
       option.classList.add('active');
     }
-
   });
 };
 
@@ -41,4 +45,18 @@ function switchMenu(newMenu){
       }
     });
   curPage = newMenu;
+}
+
+
+function createStudentDOM(data){
+  const firstName = document.querySelector("#firstName");
+  const lastName = document.querySelector("#lastName");
+  const birthday = document.querySelector("#birthday");
+  const studentFormSubmit = document.querySelector("#studentFormSubmit");
+  
+  studentFormSubmit.addEventListener("click", function() {
+      console.log(firstName.value);
+      console.log(lastName.value);
+      console.log(birthday.value);
+  });
 }
