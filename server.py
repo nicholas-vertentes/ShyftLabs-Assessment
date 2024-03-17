@@ -63,6 +63,18 @@ class MyHandler( BaseHTTPRequestHandler ):
         self.end_headers();
         self.wfile.write( bytes( page, "utf-8" ) );
 
+    def do_POST(self):
+      
+      if self.path == "/addStudent":
+        self.send_response( 200 ); # OK
+        self.send_header( "Content-type", "text/html" );
+
+        page ='Student Added'
+
+        self.send_header( "Content-length", len(page) );
+        self.end_headers();
+        self.wfile.write( bytes( page, "utf-8" ) );
+
       # else:
       #   self.send_response( 404 );
       #   self.end_headers();

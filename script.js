@@ -54,17 +54,18 @@ function createStudentDOM(data){
   let lastName = document.querySelector("#lastName");
   let birthday = document.querySelector("#birthday");
   const studentFormSubmit = document.querySelector("#studentFormSubmit");
-
-  let newStudent = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    birthday: birthday.value
-  };
   
   studentFormSubmit.addEventListener("click", function() {
       if (validateStudentFormFields(studentFormFields)){
         if (validate10YearsOld(birthday.value)){
-          console.log('success');
+
+          let newStudent = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            birthday: birthday.value
+          };
+
+          postStudentForm(newStudent, studentFormFields);
         }
       }
   });
@@ -104,4 +105,36 @@ function calculateAge(birthday){
   let age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
   return age;
+}
+
+function postStudentForm(newStudent, studentFormFields){
+  console.log(JSON.stringify(newStudent))
+  console.log(newStudent)
+  
+  fetch('/addStudent', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newStudent)
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log('Success:', data);
+
+    studentFormFields.forEach(field =>{
+      field.classList.add('successfulInput');
+    })
+
+    setTimeout(() => {
+      studentFormFields.forEach(field =>{
+        field.classList.remove('successfulInput');
+      });
+      loadPage(curPage);
+    }, 3000); // 3000 milliseconds = 3 seconds
+
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 }
