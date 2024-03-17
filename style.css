@@ -44,9 +44,15 @@ html{
 
 .mainpage{
   display: flex;
-  gap: 100px;
+  justify-content: space-between;
 }
 
 #content{
   border: 1px solid black;
+}
+
+.studentForm{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
