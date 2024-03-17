@@ -51,6 +51,18 @@ class MyHandler( BaseHTTPRequestHandler ):
         self.end_headers();
         self.wfile.write( bytes( page, "utf-8" ) );
 
+      if self.path == "/Students.html":
+        self.send_response( 200 ); # OK
+        self.send_header( "Content-type", "text/html" );
+
+        fp = open( 'Students.html' ); 
+        page = fp.read();
+        fp.close();
+
+        self.send_header( "Content-length", len(page) );
+        self.end_headers();
+        self.wfile.write( bytes( page, "utf-8" ) );
+
       # else:
       #   self.send_response( 404 );
       #   self.end_headers();
