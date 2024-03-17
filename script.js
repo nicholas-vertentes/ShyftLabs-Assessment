@@ -50,53 +50,58 @@ function switchMenu(newMenu){
 
 function createStudentDOM(data){
   const studentFormFields = document.querySelectorAll(".studentForm input");
-  const firstName = document.querySelector("#firstName");
-  const lastName = document.querySelector("#lastName");
-  const birthday = document.querySelector("#birthday");
+  let firstName = document.querySelector("#firstName");
+  let lastName = document.querySelector("#lastName");
+  let birthday = document.querySelector("#birthday");
   const studentFormSubmit = document.querySelector("#studentFormSubmit");
+
+  let newStudent = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    birthday: birthday.value
+  };
   
   studentFormSubmit.addEventListener("click", function() {
-      if (validateStudentFormFields()){
-        if (validate10YearsOld()){
-          // postStudentForm();
+      if (validateStudentFormFields(studentFormFields)){
+        if (validate10YearsOld(birthday.value)){
+          console.log('success');
         }
       }
   });
-
-  function validateStudentFormFields(){
-    allFieldsPopulated = true;
-
-    studentFormFields.forEach(field =>{
-      if (field.value == ""){
-        field.classList.add('invalidInput');
-        allFieldsPopulated = false;
-      }
-      else {
-        field.classList.remove('invalidInput');
-      }
-    })
-
-    return allFieldsPopulated;
-  }
-
-  function validate10YearsOld(){
-    if(calculateAge() < 10){
-      return false;
-    }
-    
-    return true;
-  }
-
-  function calculateAge(){
-    let userBirthdate = new Date(birthday.value);
-    let curDate = new Date();
-
-    let differenceMs = curDate - userBirthdate;
-
-    let ageDate = new Date(differenceMs);
-    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-    return age;
-  }
 }
 
+function validateStudentFormFields(studentFormFields){
+  allFieldsPopulated = true;
+
+  studentFormFields.forEach(field =>{
+    if (field.value == ""){
+      field.classList.add('invalidInput');
+      allFieldsPopulated = false;
+    }
+    else {
+      field.classList.remove('invalidInput');
+    }
+  })
+
+  return allFieldsPopulated;
+}
+
+function validate10YearsOld(birthday){
+  if(calculateAge(birthday) < 10){
+    return false;
+  }
+  
+  return true;
+}
+
+function calculateAge(birthday){
+  let userBirthdate = new Date(birthday);
+  let curDate = new Date();
+
+  let differenceMs = curDate - userBirthdate;
+
+  let ageDate = new Date(differenceMs);
+  let age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+  return age;
+}
