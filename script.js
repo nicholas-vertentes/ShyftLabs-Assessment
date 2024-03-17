@@ -49,14 +49,54 @@ function switchMenu(newMenu){
 
 
 function createStudentDOM(data){
+  const studentFormFields = document.querySelectorAll(".studentForm input");
   const firstName = document.querySelector("#firstName");
   const lastName = document.querySelector("#lastName");
   const birthday = document.querySelector("#birthday");
   const studentFormSubmit = document.querySelector("#studentFormSubmit");
   
   studentFormSubmit.addEventListener("click", function() {
-      console.log(firstName.value);
-      console.log(lastName.value);
-      console.log(birthday.value);
+      if (validateStudentFormFields()){
+        if (validate10YearsOld()){
+          // postStudentForm();
+        }
+      }
   });
+
+  function validateStudentFormFields(){
+    allFieldsPopulated = true;
+
+    studentFormFields.forEach(field =>{
+      if (field.value == ""){
+        field.classList.add('invalidInput');
+        allFieldsPopulated = false;
+      }
+      else {
+        field.classList.remove('invalidInput');
+      }
+    })
+
+    return allFieldsPopulated;
+  }
+
+  function validate10YearsOld(){
+    if(calculateAge() < 10){
+      return false;
+    }
+    
+    return true;
+  }
+
+  function calculateAge(){
+    let userBirthdate = new Date(birthday.value);
+    let curDate = new Date();
+
+    let differenceMs = curDate - userBirthdate;
+
+    let ageDate = new Date(differenceMs);
+    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+    return age;
+  }
 }
+

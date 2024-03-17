@@ -56,3 +56,7 @@ html{
   flex-direction: column;
   gap: 20px;
 }
+
+.invalidInput{
+  border: solid 2px red;
+}
