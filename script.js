@@ -67,6 +67,19 @@ function createStudentDOM(data){
 
           postStudentForm(newStudent, studentFormFields);
         }
+        else{
+          let newDiv = '<div style="margin-top: 10px; color: red;" class="newDiv">Must be at least 10</div>'
+          birthday.insertAdjacentHTML('afterend', newDiv)
+          birthday.classList.add('invalidInput')
+
+          setTimeout(() => {
+            const newDiv = document.querySelector('.newDiv');
+              if (newDiv) {
+                newDiv.remove();
+              }
+              birthday.classList.remove('invalidInput')
+          }, 3000);
+        }
       }
   });
 }
