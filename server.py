@@ -61,9 +61,35 @@ class MyHandler( BaseHTTPRequestHandler ):
         self.send_response( 200 ); # OK
         self.send_header( "Content-type", "text/html" );
 
-        fp = open( 'Students.html' ); 
-        page = fp.read();
-        fp.close();
+        page = """<body>
+                    <h1 style="text-align: center;">
+                      Student Form
+                    </h1>
+                    <div class="studentForm">
+                      <div>
+                        <label for="firstName">First Name:</label>
+                        <input type="text" placeholder="John" id="firstName">
+                      </div>
+                      <div>
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" placeholder="Smith" id="lastName">
+                      </div>
+                      <div>
+                        <label for="birthday">Birthday:</label>
+                        <input type="date" id="birthday">
+                      </div>
+                      <button id="studentFormSubmit"> Submit </button>"""
+
+        rows = db.connection.execute("SELECT * FROM Students").fetchall()
+        for row in rows:
+          page += '<div>'
+          page += str(row)
+          page += '</div>'
+
+          page +=  """</div>
+                    </body>
+                  </html>"""
+
 
         self.send_header( "Content-length", len(page) );
         self.end_headers();
@@ -76,7 +102,7 @@ class MyHandler( BaseHTTPRequestHandler ):
 
         try:
           json_data = json.loads(body.decode('utf-8'))
-          print(json_data)
+          # print(json_data)
         except json.JSONDecodeError as e:
           print('Error decoding JSON:', e)
           self.send_error(400, message='Error decoding JSON')
@@ -84,10 +110,6 @@ class MyHandler( BaseHTTPRequestHandler ):
 
         try:
           db.addStudent(json_data['firstName'], json_data['lastName'], json_data['birthday'])
-
-          rows = db.connection.execute("SELECT * FROM Students")
-          for row in rows:
-            print(row)
 
           self.send_response(200)
           self.send_header("Content-type", "text/html")
