@@ -1,5 +1,11 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler;
 import sys;
+import json;
+import sqlite3;
+import database;
+
+db = database.Database(reset=True);
+db.create_tables();
 
 class MyHandler( BaseHTTPRequestHandler ):
     def do_GET(self):
@@ -64,16 +70,35 @@ class MyHandler( BaseHTTPRequestHandler ):
         self.wfile.write( bytes( page, "utf-8" ) );
 
     def do_POST(self):
-      
       if self.path == "/addStudent":
-        self.send_response( 200 ); # OK
-        self.send_header( "Content-type", "text/html" );
+        content_length = int(self.headers['Content-Length'])
+        body = self.rfile.read(content_length)
 
-        page ='Student Added'
+        try:
+          json_data = json.loads(body.decode('utf-8'))
+          print(json_data)
+        except json.JSONDecodeError as e:
+          print('Error decoding JSON:', e)
+          self.send_error(400, message='Error decoding JSON')
+          return
 
-        self.send_header( "Content-length", len(page) );
-        self.end_headers();
-        self.wfile.write( bytes( page, "utf-8" ) );
+        try:
+          db.addStudent(json_data['firstName'], json_data['lastName'], json_data['birthday'])
+
+          rows = db.connection.execute("SELECT * FROM Students")
+          for row in rows:
+            print(row)
+
+          self.send_response(200)
+          self.send_header("Content-type", "text/html")
+          self.end_headers()
+          self.wfile.write(bytes('Student Added', 'utf-8'))
+
+        except sqlite3.Error as e:
+          print('DatabaseError:', e)
+          self.send_error(500, message='Failed to add student')
+          return
+
 
       # else:
       #   self.send_response( 404 );

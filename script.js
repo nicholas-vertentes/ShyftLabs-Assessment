@@ -108,9 +108,6 @@ function calculateAge(birthday){
 }
 
 function postStudentForm(newStudent, studentFormFields){
-  console.log(JSON.stringify(newStudent))
-  console.log(newStudent)
-  
   fetch('/addStudent', {
     method: 'POST',
     headers: {
@@ -125,7 +122,6 @@ function postStudentForm(newStudent, studentFormFields){
     studentFormFields.forEach(field =>{
       field.classList.add('successfulInput');
     })
-
     setTimeout(() => {
       studentFormFields.forEach(field =>{
         field.classList.remove('successfulInput');
